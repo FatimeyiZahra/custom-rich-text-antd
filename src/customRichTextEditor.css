@@ -1,0 +1,55 @@
+.editor {
+  min-height: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 0 0 4px 4px;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  background: #f4f8ffa8;
+  padding: 8px;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #ccc;
+  border-bottom: none;
+}
+
+.toolbar .toolbar-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.toolbar .toolbar-item:hover,
+.toolbar .toolbar-item.active {
+  background-color: #e6f7ff;
+}
+
+.editor ol,
+.editor ul {
+  list-style: initial !important;
+  padding-left: 20px !important;
+}
+
+.editor ul li {
+  list-style: initial !important;
+  padding-left: 20px !important;
+}
+
+.editor ol li {
+  list-style: auto !important;
+}
+
+.editor u {
+  text-decoration: underline;
+}
