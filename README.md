@@ -35,4 +35,5 @@ npm start
 
 2. Open your browser and navigate to http://localhost:5173.
 
-![image](https://github.com/FatimeyiZahra/custom-rich-text-antd/assets/60463624/e10da76a-f4a1-48e8-a45d-bb5a05adf606)
+![image](https://github.com/FatimeyiZahra/custom-rich-text-antd/assets/60463624/e1afc060-d279-4769-8775-6981c4ae660d)
+
