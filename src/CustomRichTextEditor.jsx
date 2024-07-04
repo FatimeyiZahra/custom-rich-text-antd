@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Button, Card, Tooltip, Space } from "antd";
+import { Button, Tooltip, Space, Dropdown, Menu } from "antd";
 import {
   BoldOutlined,
   ItalicOutlined,
@@ -8,6 +8,33 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 import "./customRichTextEditor.css";
+
+const getButtonStyle = (isActive, isHovered) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "24px",
+  height: "24px",
+  marginRight: "8px",
+  borderRadius: "4px",
+  backgroundColor: "transparent",
+  border: "none",
+  boxShadow: "none",
+  color: isActive || isHovered ? "#06c" : "#000",
+});
+
+const menuItemButtonStyle = {
+  // display: "block",
+  width: "100%",
+  padding: "10px 10px",
+  // fontSize: "16px",
+  textAlign: "left",
+  backgroundColor: "transparent",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "pointer",
+  transition: "background-color 0.3s, color 0.3s",
+};
 
 const CustomRichTextEditor = ({ value = "", onChange }) => {
   const editorRef = useRef(null);
@@ -18,6 +45,7 @@ const CustomRichTextEditor = ({ value = "", onChange }) => {
   const [isOrderedList, setIsOrderedList] = useState(false);
   const [isUnorderedList, setIsUnorderedList] = useState(false);
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [currentBlock, setCurrentBlock] = useState("Normal");
 
   useEffect(() => {
     if (editorRef.current && htmlContent !== editorRef.current.innerHTML) {
@@ -57,27 +85,77 @@ const CustomRichTextEditor = ({ value = "", onChange }) => {
       setIsUnderline(document.queryCommandState("underline"));
       setIsOrderedList(document.queryCommandState("insertOrderedList"));
       setIsUnorderedList(document.queryCommandState("insertUnorderedList"));
+      const currentBlockTag =
+        document.queryCommandValue("formatBlock") || "div";
+      switch (currentBlockTag) {
+        case "h1":
+          setCurrentBlock("Heading 1");
+          break;
+        case "h2":
+          setCurrentBlock("Heading 2");
+          break;
+        case "h3":
+          setCurrentBlock("Heading 3");
+          break;
+        default:
+          setCurrentBlock("Normal");
+      }
     }
   };
 
-  const getButtonStyle = (isActive, isHovered) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "24px",
-    height: "24px",
-    marginRight: "8px",
-    borderRadius: "4px",
-    backgroundColor: "transparent",
-    border: "none",
-    boxShadow: "none",
-    color: isActive || isHovered ? "#06c" : "#000",
-  });
+  const handleMenuClick = (e) => {
+    const formatBlock = e.key === "Normal" ? "div" : e.key;
+    applyFormatting("formatBlock", formatBlock);
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="h1">
+        <Button style={menuItemButtonStyle}>
+          <h1>Heading 1</h1>
+        </Button>
+      </Menu.Item>
+      <Menu.Item key="h2">
+        <Button style={menuItemButtonStyle}>
+          <h2>Heading 2</h2>
+        </Button>
+      </Menu.Item>
+      <Menu.Item key="h3">
+        <Button style={menuItemButtonStyle}>
+          <h3>Heading 3</h3>
+        </Button>
+      </Menu.Item>
+      <Menu.Item key="Normal">
+        <Button style={menuItemButtonStyle}>
+          <h4>Normal</h4>
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <>
       <div className="toolbar">
         <Space>
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <Button
+              onMouseEnter={() => setHoveredButton("heading")}
+              onMouseLeave={() => setHoveredButton(null)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: "8px",
+                borderRadius: "4px",
+                backgroundColor: "transparent",
+                border: "1px solid #ccc",
+                boxShadow: "none",
+                color: "#000",
+              }}
+            >
+              {currentBlock}
+            </Button>
+          </Dropdown>
           <Tooltip title="Bold">
             <Button
               icon={<BoldOutlined />}
@@ -147,7 +225,6 @@ const CustomRichTextEditor = ({ value = "", onChange }) => {
         className="editor"
         style={{
           minHeight: "110px",
-          // marginTop: '10px',
           padding: "10px",
           border: "1px solid #ccc",
           borderRadius: "0 0 4px 4px",
